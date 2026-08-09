@@ -1,18 +1,16 @@
 # GateKeeper
 
-**Enterprise API Gateway & Identity Provider**
+**Enterprise API Gateway и Identity Provider**
 
 [![Java](https://img.shields.io/badge/Java-21-orange?style=flat-square&logo=openjdk)](https://openjdk.org/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.2-green?style=flat-square&logo=springboot)](https://spring.io/projects/spring-boot)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 
-GateKeeper is a centralized authentication, authorization, and API traffic management service for microservice architectures. It combines the functionality of an Identity Provider (like Keycloak) and an API Gateway (like Kong) into a single, cohesive product.
-
-Instead of configuring and maintaining two separate systems, teams get a unified control plane for access management, routing, rate limiting, and traffic analytics.
+GateKeeper — централизованный сервис аутентификации, авторизации и управления API-трафиком для микросервисных архитектур. Объединяет функциональность Identity Provider (аналог Keycloak) и API Gateway (аналог Kong) в едином продукте. Демонстрирует глубокое понимание Spring Security, паттерна API Gateway и интеграции с Redis.
 
 ---
 
-## Architecture
+## Архитектура
 
 ```mermaid
 graph TB
@@ -46,69 +44,69 @@ graph TB
 
 ---
 
-## Tech Stack
+## Технологии
 
-| Layer | Technology |
-|-------|-----------|
-| Language | Java 21 |
-| Framework | Spring Boot 3.3.2, Spring Security, Spring Authorization Server |
-| Resilience | Resilience4j (Circuit Breaker) |
-| Database | PostgreSQL 16 |
-| Cache | Redis 7 (rate limiting), Caffeine (route/config cache) |
-| Migrations | Liquibase |
-| Mapping | MapStruct |
-| API Docs | SpringDoc OpenAPI (Swagger UI) |
-| Testing | JUnit 5, Testcontainers, WireMock, Mockito |
-| Observability | Micrometer + Prometheus, Structured JSON logging (Logback) |
-| Containerization | Docker, Docker Compose |
+| Слой | Технология |
+|------|-----------|
+| Язык | Java 21 |
+| Фреймворк | Spring Boot 3.3.2, Spring Security, Spring Authorization Server |
+| Отказоустойчивость | Resilience4j (Circuit Breaker) |
+| База данных | PostgreSQL 16 |
+| Кеш | Redis 7 (rate limiting), Caffeine (кеш маршрутов и конфигураций) |
+| Миграции | Liquibase |
+| Маппинг | MapStruct |
+| Документация API | SpringDoc OpenAPI (Swagger UI) |
+| Тестирование | JUnit 5, Testcontainers, WireMock, Mockito |
+| Наблюдаемость | Micrometer + Prometheus, структурированные JSON-логи (Logback) |
+| Контейнеризация | Docker, Docker Compose |
 
 ---
 
-## Key Features
+## Ключевые возможности
 
-- **OAuth2 / OIDC Authorization Server** -- Authorization Code, Client Credentials, Refresh Token flows with JWKS and Discovery endpoints
-- **RBAC with Role Hierarchy** -- SUPER_ADMIN > ADMIN > OPERATOR > VIEWER with granular permissions (`users:read`, `routes:write`)
-- **Multi-Tenant Isolation** -- data segregation by tenant, API key identification, per-tenant RPS limits
-- **Dynamic API Gateway** -- path-based routing from database, strip-prefix, method filtering, priority ordering
-- **Rate Limiting** -- Token Bucket algorithm via Redis with `X-RateLimit-Remaining` and `Retry-After` headers
-- **IP Filtering** -- whitelist/blacklist with CIDR notation support per tenant
-- **Circuit Breaker** -- Resilience4j-powered fault tolerance for upstream services
-- **Request/Response Transformation** -- header manipulation per route (add, remove, replace)
-- **Traffic Analytics** -- RPS, latency percentiles (p50/p95/p99), status code breakdown
-- **Audit Logging** -- append-only log of all administrative actions with JSONB change tracking
-- **Session Management** -- view and revoke active user sessions
-- **Prometheus Metrics** -- gateway throughput, latency histograms, rate limit rejections, IP blocks
+- **OAuth2 / OIDC Authorization Server** — Authorization Code, Client Credentials, Refresh Token с JWKS и Discovery-эндпоинтами
+- **RBAC с иерархией ролей** — SUPER_ADMIN > ADMIN > OPERATOR > VIEWER с гранулярными правами (`users:read`, `routes:write`)
+- **Мультитенантная изоляция** — разделение данных по тенантам, идентификация по API-ключу, лимиты RPS на тенант
+- **Динамический API Gateway** — маршрутизация из БД, strip-prefix, фильтрация методов, приоритетный порядок
+- **Rate Limiting** — алгоритм Token Bucket через Redis с заголовками `X-RateLimit-Remaining` и `Retry-After`
+- **IP-фильтрация** — whitelist/blacklist с поддержкой CIDR по тенантам
+- **Circuit Breaker** — отказоустойчивость upstream-сервисов на базе Resilience4j
+- **Трансформация запросов/ответов** — манипуляция заголовками на уровне маршрутов (добавление, удаление, замена)
+- **Аналитика трафика** — RPS, перцентили задержки (p50/p95/p99), разбивка по кодам ответа
+- **Аудит-логирование** — append-only журнал административных действий с JSONB-трекингом изменений
+- **Управление сессиями** — просмотр и отзыв активных пользовательских сессий
+- **Prometheus-метрики** — пропускная способность шлюза, гистограммы задержки, отказы rate limiter, блокировки по IP
 
 ---
 
 ## API Endpoints
 
-| Group | Prefix | Endpoints | Auth |
-|-------|--------|-----------|------|
+| Группа | Префикс | Эндпоинты | Аутентификация |
+|--------|---------|-----------|----------------|
 | OAuth2 Protocol | `/oauth2/*` | `POST /token`, `POST /authorize`, `POST /revoke`, `POST /introspect` | OAuth2 standard |
-| OIDC Discovery | `/.well-known/*` | OpenID Configuration, JWKS | Public |
-| Users | `/api/v1/users` | CRUD + search, pagination | ADMIN+ |
-| Roles | `/api/v1/roles` | CRUD with hierarchy | ADMIN+ |
-| OAuth2 Clients | `/api/v1/clients` | Register, list, deactivate | ADMIN+ |
-| Tenants | `/api/v1/tenants` | CRUD, API key management | SUPER_ADMIN |
-| Routes | `/api/v1/routes` | Dynamic route configuration | ADMIN+ |
-| Rate Limits | `/api/v1/rate-limits` | Per-tenant and per-route limits | ADMIN+ |
-| IP Rules | `/api/v1/ip-rules` | Whitelist / blacklist rules | ADMIN+ |
-| Sessions | `/api/v1/sessions` | View & revoke sessions | Bearer |
-| Analytics | `/api/v1/analytics` | Traffic stats, per-route breakdown | ADMIN+ |
-| Gateway Proxy | `/**` | Reverse proxy to upstream services | Per-route config |
+| OIDC Discovery | `/.well-known/*` | OpenID Configuration, JWKS | Публичный |
+| Пользователи | `/api/v1/users` | CRUD + поиск, пагинация | ADMIN+ |
+| Роли | `/api/v1/roles` | CRUD с иерархией | ADMIN+ |
+| OAuth2-клиенты | `/api/v1/clients` | Регистрация, список, деактивация | ADMIN+ |
+| Тенанты | `/api/v1/tenants` | CRUD, управление API-ключами | SUPER_ADMIN |
+| Маршруты | `/api/v1/routes` | Динамическая конфигурация маршрутов | ADMIN+ |
+| Rate Limits | `/api/v1/rate-limits` | Лимиты на тенант и маршрут | ADMIN+ |
+| IP-правила | `/api/v1/ip-rules` | Whitelist / blacklist правила | ADMIN+ |
+| Сессии | `/api/v1/sessions` | Просмотр и отзыв сессий | Bearer |
+| Аналитика | `/api/v1/analytics` | Статистика трафика, разбивка по маршрутам | ADMIN+ |
+| Gateway Proxy | `/**` | Обратное проксирование на upstream-сервисы | Конфигурация маршрута |
 
-> 20+ custom REST endpoints, 30+ tests
+> 20+ REST-эндпоинтов, 30+ тестов
 
 ---
 
-## Getting Started
+## Быстрый старт
 
-### Prerequisites
+### Требования
 
-- Docker & Docker Compose
+- Docker и Docker Compose
 
-### Run
+### Запуск
 
 ```bash
 git clone https://github.com/andrey-shevtsov/gatekeeper.git
@@ -116,27 +114,27 @@ cd gatekeeper
 docker compose up -d
 ```
 
-The application starts at **http://localhost:8080**. Services included:
+Приложение запускается на **http://localhost:8080**. Включенные сервисы:
 
-| Service | Port | Purpose |
-|---------|------|---------|
-| GateKeeper | 8080 | Main application |
-| PostgreSQL | 5432 | Primary database |
-| Redis | 6379 | Rate limiting state |
-| Echo Service | 9090 | Upstream mock for gateway demo |
+| Сервис | Порт | Назначение |
+|--------|------|------------|
+| GateKeeper | 8080 | Основное приложение |
+| PostgreSQL | 5432 | Основная база данных |
+| Redis | 6379 | Хранение состояния rate limiting |
+| Echo Service | 9090 | Mock upstream-сервиса для демонстрации шлюза |
 
-### Quick Test
+### Проверка
 
 ```bash
-# 1. Obtain an access token (client credentials flow)
+# 1. Получить access token (client credentials flow)
 TOKEN=$(curl -s -X POST http://localhost:8080/oauth2/token \
   -d "grant_type=client_credentials&client_id=demo-client&client_secret=demo-secret" \
   | jq -r '.access_token')
 
-# 2. List gateway routes
+# 2. Список маршрутов шлюза
 curl -H "Authorization: Bearer $TOKEN" http://localhost:8080/api/v1/routes
 
-# 3. Proxy a request through gateway to echo-service
+# 3. Проксировать запрос через шлюз на echo-service
 curl http://localhost:8080/echo/hello
 
 # 4. Swagger UI
@@ -145,76 +143,57 @@ open http://localhost:8080/swagger-ui.html
 
 ---
 
-## Project Structure
+## Структура проекта
 
 ```
 com.ashevtsov.gatekeeper/
-├── config/              # Spring configuration (Security, Redis, Cache, OpenAPI)
-├── security/            # JWT customizer, UserDetailsService, TenantContext
-├── user/                # User management domain (entity, service, controller, DTOs)
-├── role/                # Roles & permissions with hierarchy
-├── client/              # OAuth2 client registration
-├── tenant/              # Multi-tenant management
-├── session/             # User session tracking
-├── gateway/             # API Gateway core
-│   ├── filter/          #   Custom filter chain (IP, RateLimit, Auth, Transform)
-│   ├── ProxyController  #   Catch-all reverse proxy
-│   ├── ProxyService     #   RestClient-based request forwarding
-│   └── RouteResolver    #   Ant-style path matching with Caffeine cache
-├── ratelimit/           # Rate limit rule management
-├── ipfilter/            # IP whitelist/blacklist with CIDR
-├── analytics/           # Traffic logs and statistics
-├── audit/               # Append-only audit log
-└── common/              # Shared DTOs, exception handling
+├── config/              # Конфигурация Spring (Security, Redis, Cache, OpenAPI)
+├── security/            # JWT-кастомизация, UserDetailsService, TenantContext
+├── user/                # Домен управления пользователями (entity, service, controller, DTO)
+├── role/                # Роли и права с иерархией
+├── client/              # Регистрация OAuth2-клиентов
+├── tenant/              # Мультитенантное управление
+├── session/             # Отслеживание пользовательских сессий
+├── gateway/             # Ядро API Gateway
+│   ├── filter/          #   Цепочка фильтров (IP, RateLimit, Auth, Transform)
+│   ├── ProxyController  #   Catch-all обратный прокси
+│   ├── ProxyService     #   Перенаправление запросов через RestClient
+│   └── RouteResolver    #   Ant-style матчинг путей с кешем Caffeine
+├── ratelimit/           # Управление правилами rate limiting
+├── ipfilter/            # IP whitelist/blacklist с CIDR
+├── analytics/           # Логи трафика и статистика
+├── audit/               # Append-only аудит-журнал
+└── common/              # Общие DTO, обработка исключений
 ```
 
-> Domain-driven package structure -- each domain is self-contained with its entity, repository, service, controller, and DTOs.
+> Domain-driven структура пакетов — каждый домен самодостаточен и содержит entity, repository, service, controller и DTO.
 
 ---
 
-## Testing
+## Тестирование
 
 ```bash
-# Run all tests (requires Docker for Testcontainers)
+# Запуск всех тестов (требуется Docker для Testcontainers)
 ./mvnw verify
 ```
 
-| Category | Description | Tools |
-|----------|-------------|-------|
-| Unit | Services, filters, mappers | Mockito |
-| Integration | API endpoints, repositories, security flows | Testcontainers (PostgreSQL + Redis) |
-| Security | OAuth2 flows, RBAC enforcement, token validation | Spring Security Test |
-| Gateway | Proxy forwarding, rate limiting, IP filtering | WireMock |
+| Категория | Описание | Инструменты |
+|-----------|----------|-------------|
+| Unit | Сервисы, фильтры, мапперы | Mockito |
+| Integration | API-эндпоинты, репозитории, security-потоки | Testcontainers (PostgreSQL + Redis) |
+| Security | OAuth2-потоки, проверка RBAC, валидация токенов | Spring Security Test |
+| Gateway | Проксирование, rate limiting, IP-фильтрация | WireMock |
 
-All integration tests extend `AbstractIntegrationTest` with shared Testcontainers (PostgreSQL + Redis) for consistent and fast test execution.
-
----
-
-## Observability
-
-**Health checks:**
-```
-GET /actuator/health         # Aggregate status
-GET /actuator/health/db      # PostgreSQL
-GET /actuator/health/redis   # Redis
-```
-
-**Prometheus metrics** at `/actuator/prometheus`:
-
-| Metric | Type | Description |
-|--------|------|-------------|
-| `gk_proxy_requests_total` | Counter | Gateway requests (by route, method, status) |
-| `gk_proxy_latency_seconds` | Histogram | Proxy latency distribution |
-| `gk_rate_limit_rejected_total` | Counter | Requests rejected by rate limiter |
-| `gk_ip_blocked_total` | Counter | Requests blocked by IP filter |
-| `gk_auth_tokens_issued_total` | Counter | Tokens issued (by grant type) |
+Все интеграционные тесты наследуют `AbstractIntegrationTest` с общими Testcontainers (PostgreSQL + Redis) для консистентного и быстрого выполнения.
 
 ---
 
-## License
+## Лицензия
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+Проект распространяется по лицензии MIT. Подробности в [LICENSE](LICENSE).
 
 ---
 
-**Author:** [Andrey Shevtsov](https://github.com/andrey-shevtsov)
+**Автор:** [Andrey Shevtsov](https://github.com/andrey-shevtsov)
+
+> English version: [README_EN.md](README_EN.md)
