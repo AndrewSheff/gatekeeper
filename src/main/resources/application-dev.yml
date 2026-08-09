@@ -1,0 +1,14 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+  liquibase:
+    enabled: true
+
+logging:
+  level:
+    com.ashevtsov.gatekeeper: DEBUG
+    org.springframework.security: DEBUG

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd">
+
+    <changeSet id="007-1" author="ashevtsov">
+        <createTable tableName="traffic_logs">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="tenant_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="route_id" type="uuid"/>
+            <column name="method" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="path" type="varchar(2000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status_code" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="latency_ms" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="client_ip" type="varchar(50)"/>
+            <column name="request_id" type="varchar(50)"/>
+            <column name="created_at" type="timestamp with time zone" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="traffic_logs" indexName="idx_traffic_tenant_time">
+            <column name="tenant_id"/>
+            <column name="created_at"/>
+        </createIndex>
+        <createIndex tableName="traffic_logs" indexName="idx_traffic_route_time">
+            <column name="route_id"/>
+            <column name="created_at"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

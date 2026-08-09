@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd">
+
+    <!-- Дефолтный тенант -->
+    <changeSet id="010-1" author="ashevtsov">
+        <insert tableName="tenants">
+            <column name="id" value="00000000-0000-0000-0000-000000000001"/>
+            <column name="name" value="Default"/>
+            <column name="slug" value="default"/>
+            <column name="api_key" value="gk_live_default_key_for_development"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="max_rps" valueNumeric="100"/>
+        </insert>
+    </changeSet>
+
+    <!-- Базовые permissions -->
+    <changeSet id="010-2" author="ashevtsov">
+        <insert tableName="permissions">
+            <column name="id" value="10000000-0000-0000-0000-000000000001"/>
+            <column name="name" value="users:read"/>
+            <column name="resource" value="users"/>
+            <column name="action" value="READ"/>
+            <column name="description" value="Просмотр пользователей"/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="10000000-0000-0000-0000-000000000002"/>
+            <column name="name" value="users:write"/>
+            <column name="resource" value="users"/>
+            <column name="action" value="WRITE"/>
+            <column name="description" value="Создание и редактирование пользователей"/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="10000000-0000-0000-0000-000000000003"/>
+            <column name="name" value="users:delete"/>
+            <column name="resource" value="users"/>
+            <column name="action" value="DELETE"/>
+            <column name="description" value="Удаление пользователей"/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="10000000-0000-0000-0000-000000000004"/>
+            <column name="name" value="roles:read"/>
+            <column name="resource" value="roles"/>
+            <column name="action" value="READ"/>
+            <column name="description" value="Просмотр ролей"/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="10000000-0000-0000-0000-000000000005"/>
+            <column name="name" value="roles:write"/>
+            <column name="resource" value="roles"/>
+            <column name="action" value="WRITE"/>
+            <column name="description" value="Создание и редактирование ролей"/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="10000000-0000-0000-0000-000000000006"/>
+            <column name="name" value="clients:read"/>
+            <column name="resource" value="clients"/>
+            <column name="action" value="READ"/>
+            <column name="description" value="Просмотр OAuth2-клиентов"/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="10000000-0000-0000-0000-000000000007"/>
+            <column name="name" value="clients:write"/>
+            <column name="resource" value="clients"/>
+            <column name="action" value="WRITE"/>
+            <column name="description" value="Управление OAuth2-клиентами"/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="10000000-0000-0000-0000-000000000008"/>
+            <column name="name" value="routes:read"/>
+            <column name="resource" value="routes"/>
+            <column name="action" value="READ"/>
+            <column name="description" value="Просмотр маршрутов"/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="10000000-0000-0000-0000-000000000009"/>
+            <column name="name" value="routes:write"/>
+            <column name="resource" value="routes"/>
+            <column name="action" value="WRITE"/>
+            <column name="description" value="Управление маршрутами"/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="10000000-0000-0000-0000-000000000010"/>
+            <column name="name" value="tenants:read"/>
+            <column name="resource" value="tenants"/>
+            <column name="action" value="READ"/>
+            <column name="description" value="Просмотр тенантов"/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="10000000-0000-0000-0000-000000000011"/>
+            <column name="name" value="tenants:write"/>
+            <column name="resource" value="tenants"/>
+            <column name="action" value="WRITE"/>
+            <column name="description" value="Управление тенантами"/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="10000000-0000-0000-0000-000000000012"/>
+            <column name="name" value="analytics:read"/>
+            <column name="resource" value="analytics"/>
+            <column name="action" value="READ"/>
+            <column name="description" value="Просмотр аналитики"/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="10000000-0000-0000-0000-000000000013"/>
+            <column name="name" value="audit:read"/>
+            <column name="resource" value="audit"/>
+            <column name="action" value="READ"/>
+            <column name="description" value="Просмотр аудит-логов"/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="10000000-0000-0000-0000-000000000014"/>
+            <column name="name" value="ip-rules:read"/>
+            <column name="resource" value="ip-rules"/>
+            <column name="action" value="READ"/>
+            <column name="description" value="Просмотр IP-правил"/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="10000000-0000-0000-0000-000000000015"/>
+            <column name="name" value="ip-rules:write"/>
+            <column name="resource" value="ip-rules"/>
+            <column name="action" value="WRITE"/>
+            <column name="description" value="Управление IP-правилами"/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="10000000-0000-0000-0000-000000000016"/>
+            <column name="name" value="rate-limits:read"/>
+            <column name="resource" value="rate-limits"/>
+            <column name="action" value="READ"/>
+            <column name="description" value="Просмотр rate limits"/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="10000000-0000-0000-0000-000000000017"/>
+            <column name="name" value="rate-limits:write"/>
+            <column name="resource" value="rate-limits"/>
+            <column name="action" value="WRITE"/>
+            <column name="description" value="Управление rate limits"/>
+        </insert>
+    </changeSet>
+
+    <!-- Роль SUPER_ADMIN с всеми правами -->
+    <changeSet id="010-3" author="ashevtsov">
+        <insert tableName="roles">
+            <column name="id" value="20000000-0000-0000-0000-000000000001"/>
+            <column name="name" value="SUPER_ADMIN"/>
+            <column name="description" value="Полный доступ ко всем тенантам"/>
+            <column name="tenant_id" value="00000000-0000-0000-0000-000000000001"/>
+        </insert>
+
+        <!-- Назначаем все permissions для SUPER_ADMIN -->
+        <insert tableName="role_permissions">
+            <column name="role_id" value="20000000-0000-0000-0000-000000000001"/>
+            <column name="permission_id" value="10000000-0000-0000-0000-000000000001"/>
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="20000000-0000-0000-0000-000000000001"/>
+            <column name="permission_id" value="10000000-0000-0000-0000-000000000002"/>
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="20000000-0000-0000-0000-000000000001"/>
+            <column name="permission_id" value="10000000-0000-0000-0000-000000000003"/>
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="20000000-0000-0000-0000-000000000001"/>
+            <column name="permission_id" value="10000000-0000-0000-0000-000000000004"/>
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="20000000-0000-0000-0000-000000000001"/>
+            <column name="permission_id" value="10000000-0000-0000-0000-000000000005"/>
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="20000000-0000-0000-0000-000000000001"/>
+            <column name="permission_id" value="10000000-0000-0000-0000-000000000006"/>
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="20000000-0000-0000-0000-000000000001"/>
+            <column name="permission_id" value="10000000-0000-0000-0000-000000000007"/>
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="20000000-0000-0000-0000-000000000001"/>
+            <column name="permission_id" value="10000000-0000-0000-0000-000000000008"/>
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="20000000-0000-0000-0000-000000000001"/>
+            <column name="permission_id" value="10000000-0000-0000-0000-000000000009"/>
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="20000000-0000-0000-0000-000000000001"/>
+            <column name="permission_id" value="10000000-0000-0000-0000-000000000010"/>
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="20000000-0000-0000-0000-000000000001"/>
+            <column name="permission_id" value="10000000-0000-0000-0000-000000000011"/>
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="20000000-0000-0000-0000-000000000001"/>
+            <column name="permission_id" value="10000000-0000-0000-0000-000000000012"/>
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="20000000-0000-0000-0000-000000000001"/>
+            <column name="permission_id" value="10000000-0000-0000-0000-000000000013"/>
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="20000000-0000-0000-0000-000000000001"/>
+            <column name="permission_id" value="10000000-0000-0000-0000-000000000014"/>
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="20000000-0000-0000-0000-000000000001"/>
+            <column name="permission_id" value="10000000-0000-0000-0000-000000000015"/>
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="20000000-0000-0000-0000-000000000001"/>
+            <column name="permission_id" value="10000000-0000-0000-0000-000000000016"/>
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="20000000-0000-0000-0000-000000000001"/>
+            <column name="permission_id" value="10000000-0000-0000-0000-000000000017"/>
+        </insert>
+    </changeSet>
+
+    <!-- Пользователь admin -->
+    <changeSet id="010-4" author="ashevtsov">
+        <insert tableName="users">
+            <column name="id" value="30000000-0000-0000-0000-000000000001"/>
+            <column name="username" value="admin"/>
+            <column name="email" value="admin@gatekeeper.local"/>
+            <!-- пароль: admin123 (BCrypt) -->
+            <column name="password_hash" value="$2a$12$LJ3m4ys3Gqf0TXRYMfGSLOKGjVKNaOGZKSPlSYH2nvWnCYsMtRqjC"/>
+            <column name="first_name" value="Admin"/>
+            <column name="last_name" value="GateKeeper"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="tenant_id" value="00000000-0000-0000-0000-000000000001"/>
+        </insert>
+
+        <insert tableName="user_roles">
+            <column name="user_id" value="30000000-0000-0000-0000-000000000001"/>
+            <column name="role_id" value="20000000-0000-0000-0000-000000000001"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd">
+
+    <changeSet id="004-1" author="ashevtsov">
+        <createTable tableName="gateway_routes">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="tenant_id" type="uuid">
+                <constraints nullable="false" foreignKeyName="fk_routes_tenant" references="tenants(id)"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="predicate_path" type="varchar(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="target_url" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="methods" type="varchar(100)"/>
+            <column name="strip_prefix" type="int" defaultValueNumeric="1">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_priority" type="int" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="boolean" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="require_auth" type="boolean" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="required_scopes" type="varchar(500)"/>
+            <column name="created_at" type="timestamp with time zone" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp with time zone" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="gateway_routes" indexName="idx_routes_tenant">
+            <column name="tenant_id"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- Route transformations -->
+    <changeSet id="004-2" author="ashevtsov">
+        <createTable tableName="route_transformations">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="route_id" type="uuid">
+                <constraints nullable="false" foreignKeyName="fk_transformations_route"
+                             references="gateway_routes(id)" deleteCascade="true"/>
+            </column>
+            <column name="type" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phase" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="header_name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="header_value" type="varchar(1000)"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

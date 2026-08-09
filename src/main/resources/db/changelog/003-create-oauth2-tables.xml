@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd">
+
+    <!-- Spring Authorization Server: oauth2_registered_client -->
+    <changeSet id="003-1" author="ashevtsov">
+        <createTable tableName="oauth2_registered_client">
+            <column name="id" type="varchar(100)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="client_id" type="varchar(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="client_id_issued_at" type="timestamp with time zone" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="client_secret" type="varchar(200)"/>
+            <column name="client_secret_expires_at" type="timestamp with time zone"/>
+            <column name="client_name" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="client_authentication_methods" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authorization_grant_types" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="redirect_uris" type="varchar(1000)"/>
+            <column name="post_logout_redirect_uris" type="varchar(1000)"/>
+            <column name="scopes" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="client_settings" type="varchar(2000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="token_settings" type="varchar(2000)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Spring Authorization Server: oauth2_authorization -->
+    <changeSet id="003-2" author="ashevtsov">
+        <createTable tableName="oauth2_authorization">
+            <column name="id" type="varchar(100)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="registered_client_id" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="principal_name" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authorization_grant_type" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authorized_scopes" type="varchar(1000)"/>
+            <column name="attributes" type="text"/>
+            <column name="state" type="varchar(500)"/>
+            <column name="authorization_code_value" type="text"/>
+            <column name="authorization_code_issued_at" type="timestamp with time zone"/>
+            <column name="authorization_code_expires_at" type="timestamp with time zone"/>
+            <column name="authorization_code_metadata" type="text"/>
+            <column name="access_token_value" type="text"/>
+            <column name="access_token_issued_at" type="timestamp with time zone"/>
+            <column name="access_token_expires_at" type="timestamp with time zone"/>
+            <column name="access_token_metadata" type="text"/>
+            <column name="access_token_type" type="varchar(100)"/>
+            <column name="access_token_scopes" type="varchar(1000)"/>
+            <column name="oidc_id_token_value" type="text"/>
+            <column name="oidc_id_token_issued_at" type="timestamp with time zone"/>
+            <column name="oidc_id_token_expires_at" type="timestamp with time zone"/>
+            <column name="oidc_id_token_metadata" type="text"/>
+            <column name="refresh_token_value" type="text"/>
+            <column name="refresh_token_issued_at" type="timestamp with time zone"/>
+            <column name="refresh_token_expires_at" type="timestamp with time zone"/>
+            <column name="refresh_token_metadata" type="text"/>
+            <column name="user_code_value" type="text"/>
+            <column name="user_code_issued_at" type="timestamp with time zone"/>
+            <column name="user_code_expires_at" type="timestamp with time zone"/>
+            <column name="user_code_metadata" type="text"/>
+            <column name="device_code_value" type="text"/>
+            <column name="device_code_issued_at" type="timestamp with time zone"/>
+            <column name="device_code_expires_at" type="timestamp with time zone"/>
+            <column name="device_code_metadata" type="text"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Spring Authorization Server: oauth2_authorization_consent -->
+    <changeSet id="003-3" author="ashevtsov">
+        <createTable tableName="oauth2_authorization_consent">
+            <column name="registered_client_id" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="principal_name" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authorities" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="oauth2_authorization_consent"
+                       columnNames="registered_client_id,principal_name"/>
+    </changeSet>
+
+</databaseChangeLog>

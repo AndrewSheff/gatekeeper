@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd">
+
+    <include file="db/changelog/001-create-tenants.xml"/>
+    <include file="db/changelog/002-create-users-roles-permissions.xml"/>
+    <include file="db/changelog/003-create-oauth2-tables.xml"/>
+    <include file="db/changelog/004-create-gateway-routes.xml"/>
+    <include file="db/changelog/005-create-ip-rules.xml"/>
+    <include file="db/changelog/006-create-rate-limit-rules.xml"/>
+    <include file="db/changelog/007-create-traffic-logs.xml"/>
+    <include file="db/changelog/008-create-audit-logs.xml"/>
+    <include file="db/changelog/009-create-user-sessions.xml"/>
+    <include file="db/changelog/010-seed-data.xml"/>
+
+</databaseChangeLog>

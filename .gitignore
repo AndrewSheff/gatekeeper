@@ -1,0 +1,35 @@
+# Build
+target/
+build/
+*.class
+*.jar
+*.war
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+*.log
+
+# Maven wrapper (если появится)
+!.mvn/wrapper/maven-wrapper.jar
+
+# Redis dump
+dump.rdb
+
+# Node (если есть скрипты)
+node_modules/
+package-lock.json
+
